@@ -4,7 +4,14 @@ from bs4 import BeautifulSoup
 from handlers.autotrader import AutotraderHandler
 from handlers.html import HTMLHandler
 
-URL = 'https://www.autotrader.ca/cars/on/ottawa/?rcp=15&rcs=0&srt=4&prx=25&prv=Ontario&loc=Ottawa%2C%20ON&hprc=True&wcp=True&inMarket=advancedSearch'
+SIZE = 1000
+
+BASE_URL = 'https://www.autotrader.ca/cars/on/ottawa'
+PROVINCE = 'Ontario'
+CITY = 'Ottawa'
+DISTANCE = 25
+
+URL = f'{BASE_URL}/?rcp={SIZE}&rcs=0&srt=4&prx={DISTANCE}&prv={PROVINCE}&loc={CITY}%2C%20ON&hprc=True&wcp=True&inMarket=advancedSearch'
 
 page = requests.get(URL)
 
