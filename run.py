@@ -1,9 +1,9 @@
 import json
 import requests
 from bs4 import BeautifulSoup
-from utils import format_string
+from handlers.autotrader import AutotraderHandler
 
-URL = 'https://www.autotrader.ca/cars/'
+URL = 'https://www.autotrader.ca/cars/on/ottawa/?rcp=15&rcs=0&srt=4&prx=25&prv=Ontario&loc=Ottawa%2C%20ON&hprc=True&wcp=True&inMarket=advancedSearch'
 
 page = requests.get(URL)
 
@@ -14,6 +14,9 @@ results = soup.find(id='SearchListings')
 cars_cards = results.find_all("div", class_="result-item")
 
 listings = []
+
+
+handler = AutotraderHandler()
 
 for item in cars_cards:
     section = item.select_one(
@@ -30,33 +33,16 @@ for item in cars_cards:
         '.detail-center-area'
     )
 
-    name = left_section.find('span', class_='title-with-trim')
-
-    right_section = section.select_one(
-        '.detail-price-area'
-    ).select_one(
-        '.price'
-    ).find('span', class_='price-amount').text
-
     region = left_section.select_one(
         '.top-detail-area'
     )
-    price = right_section
-
-    kms = region.select_one(
-        '.kms'
-    )
-    kms_value = None
-
-    if kms:
-        kms_value = kms.select_one(
-            '.odometer-proximity'
-        ).text
 
     listing_obj = {
-        "name": format_string(name.text),
-        "price": right_section,
-        "kms": kms_value
+        "name": handler.name(section),
+        "price": handler.price(section),
+        "region": handler.region(section),
+        "kms": handler.kms(region),
+        "image": handler.image(section)
     }
     listings.append(listing_obj)
 
