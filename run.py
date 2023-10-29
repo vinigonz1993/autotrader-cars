@@ -2,6 +2,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from handlers.autotrader import AutotraderHandler
+from handlers.html import HTMLHandler
 
 URL = 'https://www.autotrader.ca/cars/on/ottawa/?rcp=15&rcs=0&srt=4&prx=25&prv=Ontario&loc=Ottawa%2C%20ON&hprc=True&wcp=True&inMarket=advancedSearch'
 
@@ -48,3 +49,5 @@ for item in cars_cards:
 
 with open("listings.json", "w") as json_file:
     json.dump(listings, json_file, indent=4)
+
+HTMLHandler().generate()
